@@ -193,11 +193,6 @@ define(function(require, exports, module) {
                     error('Invalid Element.');
                     break;
             }
-
-            // 若定位 fixed 元素，则父元素的 offset 没有意义
-            if (isFixed) {
-                result.offset = {top: 0, left: 0};
-            }
         }
 
         return result;
@@ -233,17 +228,17 @@ define(function(require, exports, module) {
         return toNumber(x);
     }
 
-    module.exports = function(myObject, baseObject) {
+    module.exports = function(myObject, targetObject) {
         if (!myObject) {
             error('myObject is invalid.');
         }
 
-        baseObject = baseObject || {};
-        baseObject.element = baseObject.element || VIEWPORT;
+        targetObject = targetObject || VIEWPORT;
+        //targetObject.element = targetObject.element || VIEWPORT;
 
         // format to { element: jqElement, position: {x: 0, y: 0} }
         myObject = normalization(myObject);
-        baseObject = normalization(baseObject);
+        targetObject = normalization(targetObject);
 
 
         // 设定目标元素的 position 为绝对定位
@@ -259,13 +254,19 @@ define(function(require, exports, module) {
 
 
         // 获取尺寸及偏移值单位换算
-        var itemsObject = [myObject, baseObject];
-        var itemObj, itemDimensions, realOffset;
+        var itemsObject = [myObject, targetObject];
+        var itemObj, itemDimensions;
         while (itemObj = itemsObject.shift()) {
             itemDimensions = getDimensions(itemObj.element);
 
-            itemObj.x = itemDimensions.offset.left;
-            itemObj.y = itemDimensions.offset.top;
+            // 若定位 fixed 元素，则父元素的 offset 没有意义
+            if (isFixed && !itemsObject.length) {
+                itemObj.x = itemObj.y = 0;
+            } else {
+                // 相对于文档（document）的当前位置
+                itemObj.x = itemDimensions.offset.left;
+                itemObj.y = itemDimensions.offset.top;
+            }
 
             // 计算真实的偏移值
             itemObj.offset = {
@@ -276,8 +277,9 @@ define(function(require, exports, module) {
 
         var parentOffset = getParentOffset(myElement);
 
-        var x = baseObject.x + baseObject.offset.x - myObject.offset.x - parentOffset.left;
-        var y = baseObject.y + baseObject.offset.y - myObject.offset.y - parentOffset.top;
+        var x = targetObject.x + targetObject.offset.x - myObject.offset.x - parentOffset.left;
+        var y = targetObject.y + targetObject.offset.y - myObject.offset.y - parentOffset.top;
+
         myElement.css({
             left: x,
             top: y
