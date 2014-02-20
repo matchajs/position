@@ -6,6 +6,52 @@ define("matcha/position/1.0.0/position-debug", [ "jquery-debug" ], function(requ
         nodeType: 1
     };
     var isFixed;
+    module.exports = function(myObject, targetObject) {
+        if (!myObject) {
+            error("myObject is invalid.");
+        }
+        targetObject = targetObject || {};
+        targetObject.element = targetObject.element || VIEWPORT;
+        // format to { element: jqElement, position: {x: 0, y: 0} }
+        myObject = normalization(myObject);
+        targetObject = normalization(targetObject);
+        // 设定目标元素的 position 为绝对定位
+        // 若元素的初始 position 不为 absolute，会影响元素的 display、宽高等属性
+        var myElement = myObject.element;
+        if (myElement.css("position") !== "fixed" || isIE6) {
+            myElement.css("position", "absolute");
+            isFixed = false;
+        } else {
+            // 定位 fixed 元素的标志位，下面有特殊处理
+            isFixed = true;
+        }
+        // 获取尺寸及偏移值单位换算
+        var itemsObject = [ myObject, targetObject ];
+        var itemObj, itemDimensions;
+        while (itemObj = itemsObject.shift()) {
+            itemDimensions = getDimensions(itemObj.element);
+            // 若定位 fixed 元素，则父元素的 offset 没有意义
+            if (isFixed && !itemsObject.length) {
+                itemObj.x = itemObj.y = 0;
+            } else {
+                // 相对于文档（document）的当前位置
+                itemObj.x = itemDimensions.offset.left;
+                itemObj.y = itemDimensions.offset.top;
+            }
+            // 计算真实的偏移值
+            itemObj.offset = {
+                x: calculateOffset(itemObj.position.x, itemDimensions.width),
+                y: calculateOffset(itemObj.position.y, itemDimensions.height)
+            };
+        }
+        var parentOffset = getParentOffset(myElement);
+        var x = targetObject.x + targetObject.offset.x - myObject.offset.x - parentOffset.left;
+        var y = targetObject.y + targetObject.offset.y - myObject.offset.y - parentOffset.top;
+        myElement.css({
+            left: x,
+            top: y
+        });
+    };
     function toNumber(s) {
         return parseFloat(s, 10) || 0;
     }
@@ -206,50 +252,4 @@ define("matcha/position/1.0.0/position-debug", [ "jquery-debug" ], function(requ
         // 转回为数字
         return toNumber(x);
     }
-    module.exports = function(myObject, targetObject) {
-        if (!myObject) {
-            error("myObject is invalid.");
-        }
-        targetObject = targetObject || VIEWPORT;
-        //targetObject.element = targetObject.element || VIEWPORT;
-        // format to { element: jqElement, position: {x: 0, y: 0} }
-        myObject = normalization(myObject);
-        targetObject = normalization(targetObject);
-        // 设定目标元素的 position 为绝对定位
-        // 若元素的初始 position 不为 absolute，会影响元素的 display、宽高等属性
-        var myElement = myObject.element;
-        if (myElement.css("position") !== "fixed" || isIE6) {
-            myElement.css("position", "absolute");
-            isFixed = false;
-        } else {
-            // 定位 fixed 元素的标志位，下面有特殊处理
-            isFixed = true;
-        }
-        // 获取尺寸及偏移值单位换算
-        var itemsObject = [ myObject, targetObject ];
-        var itemObj, itemDimensions;
-        while (itemObj = itemsObject.shift()) {
-            itemDimensions = getDimensions(itemObj.element);
-            // 若定位 fixed 元素，则父元素的 offset 没有意义
-            if (isFixed && !itemsObject.length) {
-                itemObj.x = itemObj.y = 0;
-            } else {
-                // 相对于文档（document）的当前位置
-                itemObj.x = itemDimensions.offset.left;
-                itemObj.y = itemDimensions.offset.top;
-            }
-            // 计算真实的偏移值
-            itemObj.offset = {
-                x: calculateOffset(itemObj.position.x, itemDimensions.width),
-                y: calculateOffset(itemObj.position.y, itemDimensions.height)
-            };
-        }
-        var parentOffset = getParentOffset(myElement);
-        var x = targetObject.x + targetObject.offset.x - myObject.offset.x - parentOffset.left;
-        var y = targetObject.y + targetObject.offset.y - myObject.offset.y - parentOffset.top;
-        myElement.css({
-            left: x,
-            top: y
-        });
-    };
 });
