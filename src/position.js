@@ -140,22 +140,16 @@ define(function(require, exports, module) {
 
     function formatPosition(position) {
         position = String(position).toLowerCase();
-        return position.replace(/top|right|bottom|left|center|px/i, function(i) {
-            switch (i) {
-                case 'right' || 'bottom':
-                    i = '100%';
-                    break;
-                case 'center':
-                    i = '50%';
-                    break;
-                case 'px':
-                    i = '';
-                    break;
-                default:
-                    i = 0;
-                    break;
+        return position.replace(/top|right|bottom|left|center|px/ig, function(i) {
+            if (i == 'right' || i == 'bottom') {
+                return '100%';
+            } else if (i == 'center') {
+                return '50%';
+            } else if (i == 'px') {
+                return '';
             }
-            return i;
+
+            return 0;
         });
     }
 
