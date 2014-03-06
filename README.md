@@ -13,22 +13,39 @@
 
 **参数**
 
-1. `myObject` - *(object|element)* 需要定位的元素
-2. `targetObject` - *(object|element)* 目标元素
+1. `myObject` - *(object|element)* 需要定位的元素，必填
+2. `targetObject` - *(object|element)* 目标元素，可选，如果没有传入，会默认使用当前可视范围
 
 这两个参数的格式：
 
 - `object`
 
-偏移值
 
 
-例子：
+##例子：
+
 ```js
-define(function(require, exports, module) {
-    var Position = require('position');
+    // 基本定位，4种实现效果都是一样
+    Position('#my', '#target');
+    Position({element: '#my'}, {element: '#target'});
+    Position({element: '#my', pos: '0 0'}, {element: '#target', pos: '0 0'});
+    Position({element: '#my', pos: 'left top'}, {element: '#target', pos: 'left top'});
 
-    // #my1 定位到 #taget1 元素上,
-    Position('#my1', {element: '#target1', pos: '50px 50px'});
-});
+    // #my 定位到 #taget1 元素上, #taget 坐标点偏移 x:50px  y:50p
+    Position('#my', {element: '#target', pos: '50px 50px'});
+
+    // #my 定位到 #taget 元素上
+    // #my 坐标点偏移 x:150px  y:150px
+    // #taget 坐标点偏移 x:50px  y:50px
+    Position({element: '#my', pos: '150px 150px'}, {element: '#target', pos: '50px 50px'});
+```
+
+```js
+    // 组合计算
+    Position({element: '#my', pos: 'right+10px 50%*1.5'}, {element: '#target', pos: 'right-1 -50px/2'});
+```
+
+```js
+    // 简写
+    Position({element: '#my', pos: 'center'}, {element: '#target', pos: 'center'});
 ```
