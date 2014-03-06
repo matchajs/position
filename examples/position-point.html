@@ -41,13 +41,49 @@ seajs.config({
                 }
                 #parent{
                     width: 700px;
-                    height: 200px;
-                    line-height: 200px;
+                    height: 250px;
+                    line-height: 250px;
                     margin: 10px auto;
                     padding: 5px;
                     border: 1px solid #777;
                     background-color: #fbca93;
                     text-align: center;
+                }
+
+                .console {
+                    *zoom: 1;
+                }
+                .console:after {
+                    content: "\0020";
+                    display: block;
+                    height: 0;
+                    clear: both;
+                    overflow: hidden;
+                    visibility: hidden;
+                }
+                .console dl{
+                    margin-bottom: 20px;
+                }
+                .console .options,
+                .console .button {
+                    display: inline;
+                    float: left;
+                    margin: 0 10px;
+                }
+
+                .console .button {
+                    padding-top: 27px;
+                }
+
+                .console #move {
+                    width: 100px;
+                    height: 100px;
+                    line-height: 100px;
+                }
+
+                .readme {
+                    font-size: 16px;
+                    line-height: 18px;
                 }
                 </style>
                 <div class="position-content">
@@ -56,26 +92,28 @@ seajs.config({
                 </div>
 
                 <div class="console">
-                    <dl>
-                        <dt>#my</dt>
-                        <dd>
-                            <label for="my-pos-x">X: <input type="text" id="my-pos-x" value="0"></label>
-                            <label for="my-pos-y">Y: <input type="text" id="my-pos-y" value="0"></label>
-                        </dd>
-                    </dl>
-                    
-                    <dl>
-                        <dt>#parent</dt>
-                        <dd>
-                            <label for="parent-pos-x">X: <input type="text" id="parent-pos-x" value="50px"></label>
-                            <label for="parent-pos-y">Y: <input type="text" id="parent-pos-y" value="bottom-50px"></label>
-                        </dd>
-                    </dl>
+                    <div class="options">
+                        <dl>
+                            <dt>#my</dt>
+                            <dd>
+                                <label for="my-pos-x">X: <input type="text" id="my-pos-x" value="0"></label>
+                                <label for="my-pos-y">Y: <input type="text" id="my-pos-y" value="0"></label>
+                            </dd>
+                        </dl>
+                        
+                        <dl>
+                            <dt>#parent</dt>
+                            <dd>
+                                <label for="parent-pos-x">X: <input type="text" id="parent-pos-x" value="50px"></label>
+                                <label for="parent-pos-y">Y: <input type="text" id="parent-pos-y" value="bottom-50px"></label>
+                            </dd>
+                        </dl>
+                    </div>
 
-                    <p>
-                        <button type="button" id="move">移动</button>
-                    </p>
+                    <div class="button"><button type="button" id="move">移动</button></div>
+                </div>
 
+                <div class="readme">
                     <h4>偏移量支持如下写法：</h4>
                     <ul>
                         <li>百分数，如：100%、0%、-50%</li>
