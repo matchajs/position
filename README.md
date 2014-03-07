@@ -29,18 +29,34 @@
     Position('#my', '#target');
     Position({element: '#my'}, {element: '#target'});
     Position({element: '#my', pos: '0 0'}, {element: '#target', pos: '0 0'});
-    Position({element: '#my', pos: 'left top'}, {element: '#target', pos: 'left top'});
+    Position({
+        element: '#my', pos: 'left top'
+    }, {
+        element: '#target', pos: 'left top'
+    });
+
 
     // #my 定位到 #taget1 元素上, #taget 坐标点偏移 x:50px  y:50p
     Position('#my', {element: '#target', pos: '50px 50px'});
 
+
     // #my 定位到 #taget 元素上
     // #my 坐标点偏移 x:150px  y:150px
     // #taget 坐标点偏移 x:50px  y:50px
-    Position({element: '#my', pos: '150px 150px'}, {element: '#target', pos: '50px 50px'});
+    Position({
+        element: '#my', pos: '150px 150px'
+    }, {
+        element: '#target', pos: '50px 50px'
+    });
+
 
     // 组合计算
-    Position({element: '#my', pos: 'right+10px 50%*1.5'}, {element: '#target', pos: 'right-1 -50px/2'});
+    Position({
+        element: '#my', pos: 'right+10px 50%*1.5'
+    }, {
+        element: '#target', pos: 'right-1 -50px/2'
+    });
+
 
     // 简写
     Position({element: '#my', pos: 'center'}, {element: '#target', pos: 'center'});
