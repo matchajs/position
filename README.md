@@ -38,14 +38,10 @@
     // #my 坐标点偏移 x:150px  y:150px
     // #taget 坐标点偏移 x:50px  y:50px
     Position({element: '#my', pos: '150px 150px'}, {element: '#target', pos: '50px 50px'});
-```
 
-```js
     // 组合计算
     Position({element: '#my', pos: 'right+10px 50%*1.5'}, {element: '#target', pos: 'right-1 -50px/2'});
-```
 
-```js
     // 简写
     Position({element: '#my', pos: 'center'}, {element: '#target', pos: 'center'});
 ```
